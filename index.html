@@ -100,6 +100,26 @@
       object-fit: cover;
     }
 
+    .gallery-item {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .gallery-info {
+      position: absolute;
+      bottom: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100%;
+      text-align: center;
+    }
+
+    .gallery-info .btn {
+      background-color: #2980b9; /* A different color for the price button */
+      padding: 8px 16px;
+      font-size: 16px;
+    }
+
     footer {
       background: #333;
       color: white;
@@ -146,6 +166,41 @@
       color: #000;
     }
 
+    /* Styling for buttons inside the Book Now Modal */
+    .package-btn {
+      background-color: #3498db;
+      color: white;
+      padding: 15px;
+      border: none;
+      border-radius: 8px;
+      margin: 10px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+
+    .package-btn img {
+      width: 60px;
+      height: 60px;
+      margin-right: 10px;
+      border-radius: 8px;
+    }
+
+    .selected-package {
+      margin-top: 15px;
+      font-size: 1.2em;
+      color: #e67e22;
+    }
+
+    /* Styling for buttons inside the Book Now Modal */
+    .package-container {
+      display: flex;
+      justify-content: space-around;
+      flex-wrap: wrap;
+    }
+
     @media (max-width: 768px) {
       header h1 {
         font-size: 2em;
@@ -154,6 +209,10 @@
       .services, .testimonials {
         flex-direction: column;
         align-items: center;
+      }
+
+      .package-container {
+        flex-direction: column;
       }
     }
   </style>
@@ -189,13 +248,34 @@
       <div class="service-item"><strong>Customized Menus</strong><br>Vegan, gluten-free, or cultural specialties? We’ve got you.</div>
     </div>
   </section>
+
   <section id="gallery">
     <h2>Gallery</h2>
     <div class="gallery">
-      <img src="Chicken.jpg" alt="Dish 1">
-      <img src="Adobo.jpg" alt="Dish 2">
-      <img src="letchon.jpg" alt="Event 1">
-      <img src="afritada.jpg" alt="Setup 1">
+      <div class="gallery-item">
+        <img src="Chicken.jpg" alt="Dish 1">
+        <div class="gallery-info">
+          <button class="btn" onclick="showPrice('Roasted Chicken with Herb Butter', 'PHP 500')">View Price</button>
+        </div>
+      </div>
+      <div class="gallery-item">
+        <img src="Adobo.jpg" alt="Dish 2">
+        <div class="gallery-info">
+          <button class="btn" onclick="showPrice('Adobo', 'PHP 300')">View Price</button>
+        </div>
+      </div>
+      <div class="gallery-item">
+        <img src="letchon.jpg" alt="Event 1">
+        <div class="gallery-info">
+          <button class="btn" onclick="showPrice('Lechon', 'PHP 1000')">View Price</button>
+        </div>
+      </div>
+      <div class="gallery-item">
+        <img src="afritada.jpg" alt="Setup 1">
+        <div class="gallery-info">
+          <button class="btn" onclick="showPrice('Afritada', 'PHP 400')">View Price</button>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -210,36 +290,75 @@
     </p>
   </footer>
 
+  <!-- Price Modal -->
+  <div id="priceModal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeModal('priceModal')">&times;</span>
+      <h2>Price Details</h2>
+      <p id="priceDetails"></p>
+    </div>
+  </div>
+
   <!-- Book Now Modal -->
   <div id="bookModal" class="modal">
     <div class="modal-content">
       <span class="close" onclick="closeModal('bookModal')">&times;</span>
       <h2>Book an Event</h2>
-      <form>
-        <label>Name:</label><br><input type="text" required><br><br>
-        <label>Email:</label><br><input type="email" required><br><br>
-        <label>Event Type:</label><br><input type="text"><br><br>
-        <label>Date:</label><br><input type="date"><br><br>
-        <label>Message:</label><br><textarea rows="4"></textarea><br><br>
+      <form id="bookForm" onsubmit="return submitBooking(event)">
+        <label>Name:</label><br><input type="text" id="name" required><br><br>
+        <label>Email:</label><br><input type="email" id="email" required><br><br>
+        <label>Event Type:</label><br><input type="text" id="eventType"><br><br>
+        <label>Date:</label><br><input type="date" id="eventDate"><br><br>
+        <label>Message:</label><br><textarea rows="4" id="message"></textarea><br><br>
+
+        <!-- Package Selection with Images -->
+        <h3>Select a Package</h3>
+        <div class="package-container">
+          <button type="button" class="package-btn" onclick="selectPackage('Set A', 'packageA.jpg')">
+            <img src="Chicken.jpg" alt="Set A">
+            Set A
+          </button>
+          <button type="button" class="package-btn" onclick="selectPackage('Set B', 'packageB.jpg')">
+            <img src="Adobo.jpg" alt="Set B">
+            Set B
+          </button>
+          <button type="button" class="package-btn" onclick="selectPackage('Set C', 'packageC.jpg')">
+            <img src="letchon.jpg" alt="Set C">
+            Set C
+          </button>
+        </div>
+
+        <div id="selectedPackage" class="selected-package"></div>
+
+        <br><br>
         <button type="submit" class="btn">Submit</button>
       </form>
     </div>
   </div>
 
-  <!-- View Menu Modal -->
-  <div id="menuModal" class="modal">
+  <!-- Receipt Modal -->
+  <div id="receiptModal" class="modal">
     <div class="modal-content">
-      <span class="close" onclick="closeModal('menuModal')">&times;</span>
-      <h2>Our Menu</h2>
-      <ul>
-        <li>🍽️ Roasted Chicken with Herb Butter</li>
-        <li>🥗 Mixed Green Salad with Vinaigrette</li>
-        <li>🍝 Pasta Primavera</li>
-        <li>🍰 Chocolate Lava Cake</li>
-        <li>🥤 Fresh Fruit Punch</li>
-      </ul>
+      <span class="close" onclick="closeModal('receiptModal')">&times;</span>
+      <h2>Booking Receipt</h2>
+      <div id="receiptDetails"></div>
     </div>
   </div>
+
+  <!-- View Menu Modal -->
+<div id="menuModal" class="modal">
+  <div class="modal-content">
+    <span class="close" onclick="closeModal('menuModal')">&times;</span>
+    <h2>Our Menu</h2>
+    <ul>
+      <li>🍽️ Roasted Chicken with Herb Butter - <strong>PHP 500</strong></li>
+      <li>🥗 Mixed Green Salad with Vinaigrette - <strong>PHP 150</strong></li>
+      <li>🍝 Pasta Primavera - <strong>PHP 350</strong></li>
+      <li>🍰 Chocolate Lava Cake - <strong>PHP 200</strong></li>
+      <li>🥤 Fresh Fruit Punch - <strong>PHP 100</strong></li>
+    </ul>
+  </div>
+</div>
 
   <!-- JavaScript for modals -->
   <script>
@@ -260,6 +379,48 @@
         }
       });
     };
+
+    // Handle package selection
+    function selectPackage(packageName, packageImage) {
+      document.getElementById('selectedPackage').innerHTML = `You selected: ${packageName}`; 
+      document.getElementById('selectedPackage').innerHTML += `<br><img src="${packageImage}" alt="${packageName}" style="width: 200px; margin-top: 10px;">`;
+    }
+
+    // Function to display price in the modal
+    function showPrice(dish, price) {
+      document.getElementById('priceDetails').innerHTML = `<strong>${dish}</strong> - ${price}`;
+      openModal('priceModal');
+    }
+
+    // Function to handle the form submission
+    function submitBooking(event) {
+      event.preventDefault(); // Prevent the default form submission
+
+      // Get form values
+      const name = document.getElementById('name').value;
+      const email = document.getElementById('email').value;
+      const eventType = document.getElementById('eventType').value;
+      const eventDate = document.getElementById('eventDate').value;
+      const message = document.getElementById('message').value;
+      const selectedPackage = document.getElementById('selectedPackage').textContent.trim();
+
+      // Create receipt details
+      const receiptContent = `
+        <p><strong>Name:</strong> ${name}</p>
+        <p><strong>Email:</strong> ${email}</p>
+        <p><strong>Event Type:</strong> ${eventType}</p>
+        <p><strong>Event Date:</strong> ${eventDate}</p>
+        <p><strong>Message:</strong> ${message}</p>
+        <p><strong>Package Selected:</strong> ${selectedPackage}</p>
+      `;
+
+      // Display receipt modal with details
+      document.getElementById('receiptDetails').innerHTML = receiptContent;
+      openModal('receiptModal');
+
+      // Optionally close the book modal
+      closeModal('bookModal');
+    }
   </script>
 
 </body>
