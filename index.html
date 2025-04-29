@@ -218,7 +218,10 @@
   </style>
 </head>
 <body>
-
+  <div style="position: absolute; top: 20px; right: 20px; z-index: 10;">
+    <a href="login.html" class="btn" style="background-color: skyblue;">Logout</a>
+  </div>
+  
   <!-- Header with video background -->
   <header>
     <video autoplay muted loop playsinline id="bg-video">
@@ -358,9 +361,23 @@
 
         <br><br>
         <button type="submit" class="btn">Submit</button>
+<button type="button" class="btn" style="background-color:#27ae60;" onclick="openModal('gcashModal')">Pay with GCash</button>
       </form>
     </div>
   </div>
+  <!-- GCash Payment Modal -->
+<div id="gcashModal" class="modal">
+  <div class="modal-content">
+    <span class="close" onclick="closeModal('gcashModal')">&times;</span>
+    <h2>GCash Payment</h2>
+    <p><strong>GCash Number:</strong> 0917-123-4567</p>
+    <p><strong>Amount:</strong> PHP 1,000</p>
+    <p>Please send payment to the number above and upload the proof of payment after booking.</p>
+    <!-- Optionally include a QR Code -->
+    <img src="gcash-qr.jpg" alt="GCash QR Code" style="width:200px; margin-top:10px;">
+  </div>
+</div>
+
 
   <!-- Receipt Modal -->
   <div id="receiptModal" class="modal">
